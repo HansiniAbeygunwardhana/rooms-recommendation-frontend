@@ -1,0 +1,56 @@
+<div class="w-full h-full flex justify-start items-start flex-col pt-28">
+
+    <!-- Loading indicator -->
+    <div *ngIf="isLoading">
+        Loading...
+    </div>
+
+    <p class="pl-20 text-2xl font-normal capitalize">Search Results on Available Rooms</p>
+    <!-- Main content, only shown when searchResults is available -->
+    <div *ngIf="!isLoading && searchResults && searchResults.length" class="w-full px-10">
+        <div *ngFor="let searchResult of searchResults; let lastSearchResult = last" class=" grid grid-cols-3 items-start justify-center rounded-md hover:bg-quaternary/70 px-10 py-2">
+            <div class="flex items-center flex-col my-10">
+                <div class="flex flex-row items-center justify-center gap-2">
+                    <p class="font-semibold text-3xl">{{ searchResult.hotelName }}</p>
+                </div>
+                <p class="text-center font-medium">Contract Period</p>
+                <div class="flex flex-col justify-center items-center gap-1">
+                    <div class="flex flex-row items-center justify-center gap-2">
+                        <p class="font-light">Starting Date</p>
+                        <p class="font-medium">{{ searchResult.startingDate | date }}</p>
+                    </div>
+                    <div class="flex flex-row items-center justify-center gap-2">
+                        <p class="font-light">Ending Date</p>
+                        <p class="font-medium">{{ searchResult.endingDate | date }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="flex flex-col justify-evenly gap-1 mt-5 col-span-2">
+                <div *ngFor="let basicRoomType of searchResult.basicRoomTypes; let lastroom = last">
+                    <div class="grid grid-cols-3 items-start p-2">
+                        <div class="flex flex-row items-center justify-evenly gap-2">
+                            <p class="font-light">Room Type</p>
+                            <p class="font-medium">{{basicRoomType.roomType}}</p>
+                        </div>
+                        <div class="flex flex-row items-center justify-evenly gap-2">
+                            <p class="font-light">Room Price (Per Adult)</p>
+                            <p class="font-medium">{{basicRoomType.price | currency}}</p>
+                        </div>
+                        <div class="flex flex-row items-center justify-evenly gap-2">
+                            <p class="font-light">Number of Available Rooms</p>
+                            <p class="font-medium">{{basicRoomType.numberOfAvailableRooms}}</p>
+                        </div>
+                    </div>
+                    <hr *ngIf="!lastroom" class="my-2">
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Error message -->
+    <div class="flex items-center justify-center w-screen text-xl h-4/5">
+        <div *ngIf="!isLoading && (!searchResults || searchResults.length === 0)" class="flex items-center justify-center">
+            No search results found.
+        </div>
+    </div>
+</div>

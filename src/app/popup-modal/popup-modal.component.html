@@ -1,0 +1,11 @@
+<div class="fixed inset-0 flex items-center justify-center z-50" *ngIf="showModal">
+    <!-- Background without blur -->
+    <div class="fixed inset-0 bg-gray-900 opacity-50"></div>
+  
+    <!-- Modal container -->
+    <div class="modal-container bg-white w-2/3 p-8 rounded-lg shadow-lg relative">
+      <!-- Content projected here -->
+      <ng-content></ng-content>
+    </div>
+  </div>
+  
