@@ -1,0 +1,64 @@
+<!-- Cotract Component -->
+<div *ngIf="contractList">
+    <div>
+        <button type="button" class="primary-button-dark my-5" (click)="openModal()">Add new contract</button>
+        <div *ngFor="let contract of contractList; let i=index">
+                <div class="border-b group flex flex-col md:flex-row justify-between items-center hover:bg-quaternary/40 p-3 rounded-lg">
+                    <div class="flex flex-row gap-3 p-6 items-center justify-center"(click)="onClickViewRooms(contract.id)">
+                        <div class="flex md:flex-row  flex-col items-center justify-center gap-2">
+                            <p class="hidden md:flex">{{i +1 }}.</p>
+                            <div class="flex flex-row">
+                                <p class="font-light">Starting Date : </p>
+                                <p class="font-medium pr-3">{{ contract.startingDate | date }}</p>
+                            </div>
+                            <div class="flex flex-row">
+                                <p class="font-light">Ending Date : </p>
+                                <p class="font-medium">{{contract.endingDate | date}}</p>
+                            </div>
+                        </div>
+                        <ng-icon name="heroChevronDown" [ngClass]="{'-rotate-90 duration-100' : selectedContractId === contract.id}" size="15" class="-mt-2"></ng-icon>
+                    </div>
+                    <div class="group-hover:flex flex-row gap-5 hidden">
+                        <button type="button" class="p-2 rounded-full border-2 border-black/20 flex items-center justify-center opacity-60 hover:bg-primary/30 hover:opacity-100" (click)="onClickEditButton(contract.id)">
+                            <ng-icon name="matEditOutline" color="black" size="20"></ng-icon>
+                        </button>
+                        <button type="button" class="p-2 rounded-full border-2 border-black/20 flex items-center justify-center opacity-60 hover:bg-primary/30 hover:opacity-100" (click)="onClickDeleteButton(contract.id)">
+                            <ng-icon name="matDeleteOutline" color="black" size="20"></ng-icon>
+                        </button>
+                    </div>
+                </div>
+                <ng-container *ngIf="selectedContractId === contract.id">
+                    <app-roomtype [contractId]="contract.id"></app-roomtype>
+                </ng-container>
+        
+        </div>
+    </div>
+
+    <!-- Add Contract Form -->
+    <app-popup-modal [showModal]="showModal">
+        <div class="flex flex-row items-start justify-between">
+            <div class="grid md:grid-cols-2 w-full">
+                <div class="flex  flex-row items-center justify-center text-2xl font-extraligh bg-transparent rounded-md p-4">
+                    <div class="w-2/3 h-auto">
+                        <img src="assets/svg/calender.svg" alt="placeholder" sizes="40">
+                    </div>
+                </div>
+                <form [formGroup]="contractForm" (ngSubmit)="showEditForm ? onUpdate() : onSubmit() " class="flex flex-col gap-5 mt-3 md:border-t-0 pl-5 py-10 items-center">
+                    
+                    <p class="text-xl">{{ showEditForm ? 'Update Contract' : 'Add New Contract' }}</p>
+                    <div class="w-full md:w-2/3">
+                        <label for="startingDate" class="primary-label">Starting Date</label>
+                        <input type="date" formControlName="startingDate" id="startingDate" class="primary-input-box" placeholder="Starting Date">
+                    </div>
+                    <div class="w-full md:w-2/3">
+                        <label for="endingDate" class="primary-label">Ending Date</label>
+                        <input type="date" id="endingDate" formControlName="endingDate" class="primary-input-box" placeholder="Ending Date">
+                    </div>
+                    <button type="submit" class="primary-button-dark w-1/3">{{ showEditForm ? 'Update' : 'Submit' }}</button>
+                    
+                </form>
+            </div>
+            <ng-icon name="heroXMark"  size="30" color="red" class="hover:bg-red-100 rounded-md" (click)="closeModal()"></ng-icon>
+        </div>
+    </app-popup-modal>
+</div>

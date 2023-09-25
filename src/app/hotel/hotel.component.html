@@ -1,0 +1,92 @@
+
+<div class="flex flex-col w-full h-screen text-black items-center">
+    <div class="w-5/6  mt-[80px] p-2">
+        <!-- search-bar -->
+            <div class="flex flex-col md:flex-row gap-3 mb-10">
+                <ng-select
+                [items]="hotelList"
+                [(ngModel)]="selectedHotelId"
+                [searchable]="true"
+                bindValue="id"
+                bindLabel="hotelName"
+                class="flex flex-auto h-10 w-full rounded-md border border-black/30 bg-transparent px-3 py-2 text-sm placeholder:text-gray-600 focus:outline-none focus:ring-1 focus:ring-black/30 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
+                (ngModelChange)="onSelectHotel(selectedHotelId)"
+                >
+            </ng-select>
+            <button type="button" class="primary-button-dark w-full md:w-1/5" (click)="openModal()" > Add new Hotel</button>
+                <button type="button" class="primary-button-light w-full md:w-1/5" (click)="handleHotelViewModal()">View All Hotels</button>
+            </div>
+        <div class="flex fle-col items-start justify-center w-full">
+            <div *ngIf="showHotelDetails && hotelDetails" class="w-full">
+                <p class="text-4xl font-semibold">Hotel {{ hotelDetails.hotelName}} - Contracts</p>
+                <p class="mb-2  font-light text-lg">{{hotelDetails.hotelAddress}}</p>
+                <app-contract
+                    [contractList]="hotelDetails.contracts"
+                    [hotelId]="hotelDetails.id"
+                ></app-contract>
+            </div>
+        </div>
+        <!-- Hotel Adding Form -->
+        <app-popup-modal [showModal]="showFormModal">
+        <div class="flex flex-row items-start justify-between">
+            <div class="grid md:grid-cols-2 w-full">
+                <div class="flex  flex-row items-end justify-center text-2xl font-extraligh bg-quaternary/40 rounded-md">
+                    <div class="w-2/3 h-2/3">
+                        <img src="assets/svg/travel.svg" alt="placeholder" sizes="50">
+                    </div>
+                </div>
+                <form class="flex flex-col gap-5 mt-3 border-t-2 md:border-t-0 py-16  justify-center items-center p-8 "  [formGroup]="hotelForm" (ngSubmit)="showUpdatingForm ? onUpdate() : onSubmit()">
+                    <p class="text-xl">{{ showUpdatingForm ? 'Update Hotel Details' : 'Add New Hotel' }}</p>
+                    <div class="w-full md:w-2/3">
+                        <label class="primary-label" for="hotelName" >Hotel Name </label>
+                        <input type="text" name="hotelName" id="hotelName" formControlName="hotelName" class="primary-input-box" placeholder="Hotel Name">
+                    </div>
+                    <div class="w-full md:w-2/3">
+                        <label class="primary-label" for="hotelName" >Hotel Address</label>
+                        <input type="text" name="hotelAddress" id="hotelAddress" formControlName="hotelAddress" class="primary-input-box" placeholder="Hotel Address">
+                    </div>
+                    <button type="submit" class="primary-button-dark w-1/3">{{ showUpdatingForm ? 'Update' : 'Submit' }}</button>
+                </form>
+            </div>
+            <ng-icon name="heroXMark"  size="30" color="red" class="hover:bg-red-100 rounded-md" (click)="closeModal()"></ng-icon>
+        </div>
+    </app-popup-modal>
+
+    <!-- View All Hotels Modal -->
+    <app-popup-modal [showModal]="showAllHotelViewModal">
+        <div class="flex flex-row items-start justify-between max-h-[90%]">
+            <div class="grid md:grid-cols-2 w-full">
+                <div class="flex  flex-row items-end justify-center text-2xl font-extralight rounded-md">
+                    <div class="w-2/3 h-2/3">
+                        <img src="assets/svg/travel.svg" alt="placeholder" sizes="50">
+                    </div>
+                </div>
+                <div class="flex flex-col mt-3 border-t-2 md:border-t-0 justify-center items-start p-8 gap-1">
+                    <p class="font-semibold text-xl">All Hotels</p>
+                    <div class="max-h-60 min-h-40  overflow-y-auto overflow-x-hidden w-full"> <!-- Adjust max height as needed -->
+                        <div *ngFor="let hotel of hotelList; let i = index" class="group ml-3 flex flex-row items-center justify-between w-full hover:bg-quaternary/40 rounded-md py-2 px-5">
+                            <div class="flex flex-row justify-center items-start gap-3">
+                                <p> {{i +1}}.</p>
+                                <p>{{hotel.hotelName}}</p>
+                            </div>
+                            <div class="flex flex-row gap-5 group-hover:opacity-100 opacity-50">
+                                <button type="button" class="p-1 rounded-full border-2 border-black/20 flex items-center justify-center opacity-60 hover:bg-primary/30 hover:opacity-100" (click)="onClickEditButton(hotel.id)">
+                                    <ng-icon name="matEditOutline" color="black" size="15"></ng-icon>
+                                </button>
+                                <button type="button" class="p-1 rounded-full border-2 border-black/20 flex items-center justify-center opacity-60 hover:bg-primary/30 hover:opacity-100" (click)="onClickDeleteButton(hotel.id)">
+                                    <ng-icon name="matDeleteOutline" color="black" size="15"></ng-icon>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>                
+                
+            </div>
+            <ng-icon name="heroXMark"  size="30" color="red" class="hover:bg-red-100 rounded-md" (click)="handleHotelViewModal()"></ng-icon>
+        </div>
+    </app-popup-modal>
+    </div>
+      
+      
+    
+</div>

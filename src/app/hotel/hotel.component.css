@@ -1,0 +1,5 @@
+/* your-component.css or your-component.scss */
+::ng-deep .ng-option {
+    @apply bg-white text-secondary w-full rounded-sm p-2 hover:bg-quaternary
+  }
+    
