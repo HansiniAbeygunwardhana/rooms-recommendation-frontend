@@ -29,7 +29,6 @@ export class HotelComponent {
         this.hotelList = hotelList
       }
     )
-    this.onSelectHotel(2)
   }
 
   hotelForm = new FormGroup({

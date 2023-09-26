@@ -65,7 +65,9 @@ export class RoomtypeComponent  implements OnInit{
 
   async handleAddAnother(){
     if (this.roomTypeForm.valid) {
-      this.addingData()
+      await this.addingData()
+      this.roomTypes =  await this.roomtypeService.getRoomsByContractId(this.contractId)
+      this.roomTypeForm.reset()
     }
   }
 
