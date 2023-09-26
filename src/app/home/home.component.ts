@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SearchData } from '../models/search';
 import { Router } from '@angular/router';
-import { state } from '@angular/animations';
 
 @Component({
   selector: 'app-home',
@@ -14,6 +13,7 @@ export class HomeComponent {
   bookingForm: FormGroup = new FormGroup({});
   searchData! : SearchData
   response! : any
+  error_message = false;
 
   constructor(private fb: FormBuilder , private router : Router) { 
     this.bookingForm = this.fb.group({
@@ -46,8 +46,13 @@ export class HomeComponent {
 
   async onSubmit() {
      this.searchData = this.bookingForm.value;
-    if (this.bookingForm.valid) {
-      this.router.navigate(['/search-result'] , { queryParams: { searchData: JSON.stringify(this.searchData) } })
+     const today = new Date()
+     const checkInDate = new Date(this.searchData.checkInDate)
+    if (this.bookingForm.valid && checkInDate >= today) {
+     this.router.navigate(['/search-result'] , { queryParams: { searchData: JSON.stringify(this.searchData) } })
+    } else if (checkInDate <= today){
+      this.error_message = true
+      this.bookingForm.get('checkInDate')?.patchValue('');
     }
   }
 
