@@ -1,16 +1,17 @@
-import { Component , Input  , OnInit} from '@angular/core';
+import { Component , Input  , OnChanges} from '@angular/core';
 import { Contract } from '../models/contract';
 import { FormControl, FormGroup, NonNullableFormBuilder, Validators } from '@angular/forms';
 import { ContractService } from '../services/contract.service';
 import { ToastrService } from 'ngx-toastr';
 import { CustomResponse } from '../models/response';
+import { PaginatedResponse } from '../models/pages';
 
 @Component({
   selector: 'app-contract',
   templateUrl: './contract.component.html',
   styleUrls: ['./contract.component.css']
 })
-export class ContractComponent implements OnInit {
+export class ContractComponent implements OnChanges {
 
   contractList! : Contract[] ;
   @Input() hotelId! : number;
@@ -18,13 +19,16 @@ export class ContractComponent implements OnInit {
   showModal = false;
   showEditForm = false;
   updatingContract! : Contract
-
+  pageDetails! : PaginatedResponse<Contract>
+  pageNumber = 0
+  itemsPerPage = 4
 
   constructor(private contractService : ContractService , private toastr : ToastrService) {
   }
 
- async ngOnInit(): Promise<void> {
-      this.contractList = await this.contractService.getContractsByHotelId(this.hotelId)
+ async ngOnChanges(): Promise<void> {
+      this.pageDetails = await this.contractService.getContractsByHotelId(this.hotelId , 0 , this.itemsPerPage)
+      this.contractList =  this.pageDetails.content
   }
 
   contractForm = new FormGroup ({
@@ -48,7 +52,8 @@ export class ContractComponent implements OnInit {
         hotelId : this.hotelId
       }
       const message = (await this.contractService.addContract(newData)).message
-      this.contractList = await this.contractService.getContractsByHotelId(this.hotelId)
+      this.pageDetails = await this.contractService.getContractsByHotelId(this.hotelId , this.pageNumber , this.itemsPerPage)
+      this.contractList = this.pageDetails.content
       this.toastr.success(message)
       this.closeModal()
 
@@ -69,7 +74,8 @@ export class ContractComponent implements OnInit {
     if (contractId) {
       console.log(contractId)
       await this.contractService.deleteContract(contractId)
-      this.contractList = await this.contractService.getContractsByHotelId(this.hotelId)
+      this.pageDetails = await this.contractService.getContractsByHotelId(this.hotelId , this.pageNumber , this.itemsPerPage)
+      this.contractList = this.pageDetails.content
     }
     
   }
@@ -100,7 +106,8 @@ export class ContractComponent implements OnInit {
         hotelId : this.hotelId
       }
       const message = (await this.contractService.updateContracts(this.updatingContract.id ,newData)).message
-      this.contractList = await this.contractService.getContractsByHotelId(this.hotelId)
+      this.pageDetails = await this.contractService.getContractsByHotelId(this.hotelId , this.pageNumber , this.itemsPerPage)
+      this.contractList = this.pageDetails.content
       this.toastr.success(message)
       this.closeModal()
 
@@ -114,11 +121,28 @@ export class ContractComponent implements OnInit {
 
   closeModal() {
     this.showModal = false;
+    this.showEditForm = false;
   }
   
   converDatetoString ( date : Date) {
     return date.toString().split('T')[0];
   }
 
+ async nextPage(){
+    if (this.pageNumber < this.pageDetails.totalPages -1) {
+      this.pageNumber++
+      this.pageDetails = await this.contractService.getContractsByHotelId(this.hotelId , this.pageNumber , this.itemsPerPage)
+      this.contractList = this.pageDetails.content
+    }
+
+  }
+
+ async previousPage(){
+    if (this.pageNumber >= 0) {
+      this.pageNumber--
+      this.pageDetails = await this.contractService.getContractsByHotelId(this.hotelId , this.pageNumber , this.itemsPerPage)
+      this.contractList = this.pageDetails.content
+    }
+  }
 
 }

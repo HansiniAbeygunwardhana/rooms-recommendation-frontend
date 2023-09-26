@@ -13,7 +13,7 @@ export const APiRoutes = {
     roomTypes : `${baseUrl}/rooms` ,
     roomtypebyId (id : number) {return `${baseUrl}/rooms/${id}`},
     roomtypebyIdUrl (id : number) {return `${baseUrl}/rooms/id${id}`},
-    ContractByHotelId (id : number) {return `${baseUrl}/contract/hotel${id}`},
+    ContractByHotelId (id : number , page : number , size : number) {return `${baseUrl}/contract/hotel${id}/page?page=${page}&size=${size}`},
     ContractById (id : number) {return `${baseUrl}/contract/${id}`},
     contract : `${baseUrl}/contract`,
     search : `${baseUrl}/search`

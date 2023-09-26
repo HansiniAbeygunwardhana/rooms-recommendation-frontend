@@ -22,7 +22,7 @@
                 <p class="text-4xl font-semibold">Hotel {{ hotelDetails.hotelName}} - Contracts</p>
                 <p class="mb-2  font-light text-lg">{{hotelDetails.hotelAddress}}</p>
                 <app-contract
-                    [hotelId]="hotelDetails.id"
+                    [hotelId]="selectedHotelId"
                 ></app-contract>
                 </div>
             </div>  
@@ -88,7 +88,7 @@
                         </div>
                     </div>
                     <div class="flex flex-row items-center justify-center gap-5 cursor-pointer text-xs" *ngIf="pageDetails">
-                        <button class="bg-primary/10 p-2 rounded-md hover:bg-primary/40 disabled:opacity-10" (click)="previousPage()" [disabled]="this.pageDetails.number == this.pageDetails.totalPages">Previous</button>
+                        <button class="bg-primary/10 p-2 rounded-md hover:bg-primary/40 disabled:opacity-10 2" (click)="previousPage()" [disabled]="this.pageDetails.number == this.pageDetails.totalPages">Previous</button>
                         <button class="bg-primary/10 p-2 rounded-md hover:bg-primary/40 disabled:opacity-10" (click)="nextPage()">Next</button>
                     </div>
                 </div>                
