@@ -1,35 +1,42 @@
-import { Component } from '@angular/core';
+import { Component, OnInit ,  } from '@angular/core';
 import { Hotel } from '../models/hotel';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { HotelService } from '../services/hotel.service';
 import { ToastrService } from 'ngx-toastr';
 import { CustomResponse } from '../models/response';
+import { PaginatedResponse } from '../models/pages';
 
 @Component({
   selector: 'app-hotel',
   templateUrl: './hotel.component.html',
   styleUrls: ['./hotel.component.css']
 })
-export class HotelComponent {
+export class HotelComponent implements OnInit {
 
   showFormModal = false
   showAllHotelViewModal = false
   showHotelDetails = false
   hotelList! : Hotel[]
+  hotelListFull! : Hotel[]
   hotelDetails! : Hotel ;
   selectedHotelId! : number;
   updatingHotel! : Hotel;
   showUpdatingForm = false;
+  pageDetails! : PaginatedResponse<Hotel>
   
 
 
-  constructor(private hotelService : HotelService , private toastr : ToastrService) {
+  constructor(private hotelService : HotelService , private toastr : ToastrService) {}
+
+  async ngOnInit(): Promise<void> {
     this.hotelService.getAllHotels().then(
       (hotelList : Hotel[]) => {
-        this.hotelList = hotelList
+        this.hotelListFull = hotelList
       }
     )
   }
+
+
 
   hotelForm = new FormGroup({
     hotelName : new FormControl("" , [Validators.required]),
@@ -42,7 +49,7 @@ export class HotelComponent {
     if (this.hotelForm.valid) {
      const response : CustomResponse = await this.hotelService.addNewHotel(newHotel)
      this.hotelForm.reset()
-     this.hotelList = await this.hotelService.getAllHotels()
+     this.hotelListFull = await this.hotelService.getAllHotels()
       this.closeModal()
       this.toastr.success(response.message)
     }
@@ -83,7 +90,7 @@ export class HotelComponent {
 
     const updatedData : Hotel =  this.hotelForm.value as Hotel
     const message = (await this.hotelService.updateHotel(this.updatingHotel.id , updatedData)).message
-    this.hotelList = await this.hotelService.getAllHotels()
+    this.hotelListFull = await this.hotelService.getAllHotels()
     this.toastr.success(message)
     this.closeModal()
   }
@@ -98,8 +105,34 @@ export class HotelComponent {
     this.showFormModal = false;
   }
 
-  handleHotelViewModal(){
-    this.showAllHotelViewModal = !this.showAllHotelViewModal
+ async openAllHotelViewModal(){
+    this.showAllHotelViewModal = true;
+    this.pageDetails = (await this.hotelService.getHotelPages(0 , 5))
+    this.hotelList = this.pageDetails.content
+  }
+
+  closeAllHotelViewModal(){
+    this.showAllHotelViewModal = false
+  }
+
+  async nextPage(){
+    if (this.pageDetails.number >= 0) {
+      const newPageNum = this.pageDetails.number + 1
+      if (newPageNum < this.pageDetails.totalPages) {
+        this.pageDetails = (await this.hotelService.getHotelPages(newPageNum , 5))
+        this.hotelList = this.pageDetails.content
+      }
+    }
+  }
+
+  async previousPage(){
+    if (this.pageDetails.number >= 0) {
+      const newPageNum = this.pageDetails.number - 1
+      if (newPageNum >= 0 ) {
+        this.pageDetails = (await this.hotelService.getHotelPages(newPageNum , 5))
+        this.hotelList = this.pageDetails.content
+      }
+    }
   }
 
 }

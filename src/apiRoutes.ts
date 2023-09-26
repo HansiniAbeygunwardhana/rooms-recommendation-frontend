@@ -7,6 +7,7 @@ export const APiRoutes = {
     addCustomer : `${baseUrl}/customers/add` , 
     deleteCustomer (id : number) {return `${baseUrl}/customers/delete/${id}`},
     hotels : `${baseUrl}/hotels` ,
+    hotelsbypage : `${baseUrl}/hotels/page` ,
     hotelById (id : number) {return `${baseUrl}/hotels/${id}`} ,
     deleteHotelById (id : number) {return `${baseUrl}/hotels/delete/${id}`},
     roomTypes : `${baseUrl}/rooms` ,
