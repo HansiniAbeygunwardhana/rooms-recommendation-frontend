@@ -1,4 +1,4 @@
-import { Component , Input } from '@angular/core';
+import { Component , Input  , OnInit} from '@angular/core';
 import { Contract } from '../models/contract';
 import { FormControl, FormGroup, NonNullableFormBuilder, Validators } from '@angular/forms';
 import { ContractService } from '../services/contract.service';
@@ -10,9 +10,9 @@ import { CustomResponse } from '../models/response';
   templateUrl: './contract.component.html',
   styleUrls: ['./contract.component.css']
 })
-export class ContractComponent {
+export class ContractComponent implements OnInit {
 
-  @Input() contractList! : Contract[] ;
+  contractList! : Contract[] ;
   @Input() hotelId! : number;
   selectedContractId! : number ;
   showModal = false;
@@ -21,6 +21,10 @@ export class ContractComponent {
 
 
   constructor(private contractService : ContractService , private toastr : ToastrService) {
+  }
+
+ async ngOnInit(): Promise<void> {
+      this.contractList = await this.contractService.getContractsByHotelId(this.hotelId)
   }
 
   contractForm = new FormGroup ({
