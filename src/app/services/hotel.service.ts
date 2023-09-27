@@ -3,6 +3,7 @@ import { Hotel } from '../models/hotel';
 import axios from 'axios';
 import { APiRoutes } from 'src/apiRoutes';
 import { CustomResponse } from '../models/response';
+import { PaginatedResponse } from '../models/pages';
 
 @Injectable({
   providedIn: 'root'
@@ -27,5 +28,9 @@ export class HotelService {
 
   async updateHotel(id : number , hotel : Hotel) : Promise<CustomResponse> {
     return (await axios.put(APiRoutes.hotelById(id) , hotel)).data
+  }
+
+  async getHotelPages(page : number , size : number) : Promise<PaginatedResponse<Hotel>> {
+    return (await axios.get(APiRoutes.hotelsbypage + `?page=${page}&size=${size}&sort=hotelName,asc`)).data
   }
 }

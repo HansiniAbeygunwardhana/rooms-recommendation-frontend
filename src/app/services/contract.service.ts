@@ -3,6 +3,7 @@ import { Contract } from '../models/contract';
 import axios from 'axios';
 import { APiRoutes } from 'src/apiRoutes';
 import { CustomResponse } from '../models/response';
+import { PaginatedResponse } from '../models/pages';
 
 @Injectable({
   providedIn: 'root'
@@ -17,8 +18,8 @@ export class ContractService {
     return (await axios.delete(APiRoutes.ContractById(id))).data
   }
 
-  async getContractsByHotelId(id : number) : Promise<Contract[]> {
-    return (await axios.get(APiRoutes.ContractByHotelId(id))).data
+  async getContractsByHotelId(id : number , page : number , size : number) : Promise<PaginatedResponse<Contract>> {
+    return (await axios.get(APiRoutes.ContractByHotelId(id , page , size))).data
   }
 
   async getContracts(id : number) : Promise<Contract> {

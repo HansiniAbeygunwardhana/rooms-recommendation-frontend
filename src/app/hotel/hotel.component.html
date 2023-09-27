@@ -4,7 +4,7 @@
         <!-- search-bar -->
             <div class="flex flex-col md:flex-row gap-3 mb-10">
                 <ng-select
-                [items]="hotelList"
+                [items]="hotelListFull"
                 [(ngModel)]="selectedHotelId"
                 [searchable]="true"
                 bindValue="id"
@@ -14,7 +14,7 @@
                 >
             </ng-select>
             <button type="button" class="primary-button-dark w-full md:w-1/5" (click)="openModal()" > Add new Hotel</button>
-                <button type="button" class="primary-button-light w-full md:w-1/5" (click)="handleHotelViewModal()">View All Hotels</button>
+                <button type="button" class="primary-button-light w-full md:w-1/5" (click)="openAllHotelViewModal()">View All Hotels</button>
             </div>
             <ng-container *ngIf="selectedHotelId; else elseTemplate">
             <div class="flex fle-col items-start justify-center w-full" *ngIf="selectedHotelId">
@@ -22,8 +22,7 @@
                 <p class="text-4xl font-semibold">Hotel {{ hotelDetails.hotelName}} - Contracts</p>
                 <p class="mb-2  font-light text-lg">{{hotelDetails.hotelAddress}}</p>
                 <app-contract
-                    [contractList]="hotelDetails.contracts"
-                    [hotelId]="hotelDetails.id"
+                    [hotelId]="selectedHotelId"
                 ></app-contract>
                 </div>
             </div>  
@@ -70,9 +69,9 @@
                         <img src="assets/svg/travel.svg" alt="placeholder" sizes="50">
                     </div>
                 </div>
-                <div class="flex flex-col mt-3 border-t-2 md:border-t-0 justify-center items-start p-8 gap-1">
+                <div class="flex flex-col mt-3 border-t-2 md:border-t-0 justify-center items-center p-8 gap-1">
                     <p class="font-semibold text-xl">All Hotels</p>
-                    <div class="max-h-60 min-h-40  overflow-y-auto overflow-x-hidden w-full"> <!-- Adjust max height as needed -->
+                    <div class="h-60 min-h-40  w-full"> <!-- Adjust max height as needed -->
                         <div *ngFor="let hotel of hotelList; let i = index" class="group ml-3 flex flex-row items-center justify-between w-full hover:bg-quaternary/40 rounded-md py-2 px-5">
                             <div class="flex flex-row justify-center items-start gap-3">
                                 <p> {{i +1}}.</p>
@@ -88,10 +87,14 @@
                             </div>
                         </div>
                     </div>
+                    <div class="flex flex-row items-center justify-center gap-5 cursor-pointer text-xs" *ngIf="pageDetails">
+                        <button class="bg-primary/10 p-2 rounded-md hover:bg-primary/40 disabled:opacity-10 2" (click)="previousPage()" [disabled]="this.pageDetails.number == this.pageDetails.totalPages">Previous</button>
+                        <button class="bg-primary/10 p-2 rounded-md hover:bg-primary/40 disabled:opacity-10" (click)="nextPage()">Next</button>
+                    </div>
                 </div>                
                 
             </div>
-            <ng-icon name="heroXMark"  size="30" color="red" class="hover:bg-red-100 rounded-md" (click)="handleHotelViewModal()"></ng-icon>
+            <ng-icon name="heroXMark"  size="30" color="red" class="hover:bg-red-100 rounded-md" (click)="closeAllHotelViewModal()"></ng-icon>
         </div>
     </app-popup-modal>
     </div>

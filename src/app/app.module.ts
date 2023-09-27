@@ -12,7 +12,7 @@ import { ContractComponent } from './contract/contract.component';
 import { RoomtypeComponent } from './roomtype/roomtype.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations'
 import { heroUsers , heroBars4 , heroHome , heroXMark , heroPlusSmall , heroPlus  , heroMinus , heroChevronDown } from '@ng-icons/heroicons/outline';
-import { matDeleteOutline  , matEditOutline} from '@ng-icons/material-icons/outline'
+import { matDeleteOutline  , matEditOutline , matArrowBackIosOutline , matArrowForwardIosOutline } from '@ng-icons/material-icons/outline'
 import { NgIconsModule } from '@ng-icons/core';
 import { PopupModalComponent } from './popup-modal/popup-modal.component';
 import { CommonModule } from '@angular/common';
@@ -39,7 +39,9 @@ import { SearchResultComponent } from './search-result/search-result.component';
     FormsModule,
     NgSelectModule,
     NoopAnimationsModule,
-    NgIconsModule.withIcons({heroUsers , heroBars4 , heroHome , heroXMark , heroPlusSmall , heroPlus , heroMinus , heroChevronDown , matDeleteOutline , matEditOutline}),
+    NgIconsModule.withIcons({heroUsers , heroBars4 , heroHome , heroXMark , heroPlusSmall , 
+                              heroPlus , heroMinus , heroChevronDown , matDeleteOutline , matEditOutline , 
+                                matArrowForwardIosOutline , matArrowBackIosOutline}),
     CommonModule,
     BrowserAnimationsModule, // required animations module
     ToastrModule.forRoot({

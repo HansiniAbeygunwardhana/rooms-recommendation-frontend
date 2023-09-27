@@ -11,6 +11,7 @@
               <div class="w-full md:w-2/3">
                 <label for="checkInDate" class="primary-label">Check-in Date:</label>
                 <input type="date" id="checkInDate" formControlName="checkInDate" class="primary-input-box w-1/5">
+                <p *ngIf="error_message" class="text-red-500 text-xs"> Enter today or later date</p>
               </div>
               <div class="w-full md:w-2/3">
                 <label for="numberOfNights" class="primary-label">Number of Nights:</label>
